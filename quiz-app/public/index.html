@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Blob Background Elements -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="app-container">
+
+        <!-- Auth Screen (Login/Register) -->
+        <main id="auth-screen" class="screen active">
+            <div class="glass-card auth-card">
+                <div class="auth-header">
+                    <img src="logo.png" alt="Quiz Master Logo" class="app-logo"
+                        style="width: 80px; margin-bottom: 10px;">
+                    <h1>Welcome Back</h1>
+                    <p id="auth-subtitle">Login to Quiz Master.</p>
+                </div>
+
+                <form id="auth-form">
+                    <div class="input-group">
+                        <input type="text" id="auth-username" placeholder="Username" required autocomplete="off">
+                        <span class="focus-border"></span>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="auth-password" placeholder="Password" required>
+                        <span class="focus-border"></span>
+                    </div>
+                    <div class="input-group role-selector hidden" id="role-group">
+                        <select id="auth-role">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="auth-btn">
+                        <span>Login</span>
+                    </button>
+
+                    <div class="auth-switch">
+                        <p>Don't have an account? <span id="switch-to-register" class="link-text">Register here</p>
+                        <p class="hidden">Already have an account? <span id="switch-to-login" class="link-text">Login
+                                here</p>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- Teacher Dashboard Screen -->
+        <main id="teacher-dashboard" class="screen">
+            <div class="glass-card dashboard-card">
+                <div class="dashboard-header">
+                    <div style="display:flex; align-items:center; gap: 15px;">
+                        <img src="logo.png" alt="Quiz Master" class="app-logo"
+                            style="width: 40px; height: 40px; border-radius: 8px;">
+                        <h2>Teacher Dashboard</h2>
+                    </div>
+                    <div class="header-actions">
+                        <button id="teacher-nav-add" class="btn-sm btn-secondary active">Add Question</button>
+                        <button id="teacher-nav-progress" class="btn-sm btn-secondary">Student Progress</button>
+                        <button id="teacher-logout" class="btn-sm btn-danger">Logout</button>
+                    </div>
+                </div>
+
+                <div id="teacher-view-add" class="teacher-view active">
+                    <h3>Add New Question</h3>
+                    <form id="add-question-form">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <select id="q-subject" required>
+                                    <option value="" disabled selected>Select Subject</option>
+                                    <!-- Subjects injected here -->
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <select id="q-section" required disabled>
+                                    <option value="" disabled selected>Select Section</option>
+                                    <!-- Sections injected dynamically based on subject -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" id="q-text" placeholder="Question Text" required>
+                        </div>
+
+                        <div class="options-inputs">
+                            <input type="text" id="q-opt-a" placeholder="Option A" required>
+                            <input type="text" id="q-opt-b" placeholder="Option B" required>
+                            <input type="text" id="q-opt-c" placeholder="Option C" required>
+                            <input type="text" id="q-opt-d" placeholder="Option D" required>
+                        </div>
+
+                        <div class="input-group">
+                            <select id="q-correct" required>
+                                <option value="" disabled selected>Correct Option</option>
+                                <option value="A">Option A</option>
+                                <option value="B">Option B</option>
+                                <option value="C">Option C</option>
+                                <option value="D">Option D</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary mt-3">Add Question</button>
+                    </form>
+                </div>
+
+                <div id="teacher-view-progress" class="teacher-view hidden">
+                    <h3>Student Progress</h3>
+                    <div class="table-container">
+                        <table class="progress-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Subject</th>
+                                    <th>Section</th>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="progress-tbody">
+                                <tr>
+                                    <td colspan="5">Loading progress...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Student Dashboard Screen -->
+        <main id="student-dashboard" class="screen">
+            <div class="glass-card dashboard-card" id="student-subject-view">
+                <div class="dashboard-header">
+                    <div style="display:flex; align-items:center; gap: 15px;">
+                        <img src="logo.png" alt="Quiz Master" class="app-logo"
+                            style="width: 40px; height: 40px; border-radius: 8px;">
+                        <h2>Hello, <span id="student-name">Student</span>!</h2>
+                    </div>
+                    <button id="student-logout" class="btn-sm btn-danger">Logout</button>
+                </div>
+                <p>Choose a subject to test your knowledge.</p>
+
+                <div class="subjects-grid" id="subjects-container">
+                    <div class="subject-card loading">Loading subjects...</div>
+                </div>
+            </div>
+
+            <!-- New Section Selection View for Student -->
+            <div class="glass-card dashboard-card hidden" id="student-section-view">
+                <div class="dashboard-header">
+                    <button id="back-to-subjects" class="btn-sm btn-secondary">← Back</button>
+                    <h2 id="section-view-title">Select Section</h2>
+                    <div style="width: 70px;"></div> <!-- spacer -->
+                </div>
+                <p>Select a section to begin the quiz. Difficulties increase progressively.</p>
+                <div class="sections-list" id="sections-container">
+                    <!-- Sections injected here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Quiz Screen -->
+        <main id="quiz-screen" class="screen">
+            <div class="glass-card quiz-card">
+                <div class="quiz-header">
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <div class="quiz-meta">
+                        <span id="question-counter" class="badge">Q 1/10</span>
+                        <span id="difficulty-badge" class="badge">Easy</span>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <h2 id="question-text">Loading question...</h2>
+                </div>
+
+                <div class="options-grid" id="options-container">
+                    <!-- Options injected via JS -->
+                </div>
+
+                <div class="quiz-footer">
+                    <button id="next-btn" class="btn-secondary" disabled>
+                        <span>Next</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Result Screen -->
+        <main id="result-screen" class="screen">
+            <div class="glass-card result-card">
+                <div class="celebration" id="celebration-icon">🏆</div>
+                <h2>Quiz Completed!</h2>
+
+                <div class="score-display">
+                    <div class="score-circle">
+                        <span id="final-score">0</span>
+                        <span class="total" id="final-total">/ 0</span>
+                    </div>
+                </div>
+
+                <p id="result-message" class="result-message">You're a genius!</p>
+
+                <div class="action-buttons">
+                    <button id="restart-btn" class="btn-primary">Play Same Subject</button>
+                    <button id="home-btn" class="btn-secondary">Dashboard</button>
+                </div>
+
+                <div class="leaderboard-preview mt-4" id="subject-leaderboard">
+                    <h3>Top Scorers in this Subject</h3>
+                    <ul id="leaderboard-list">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="confetti-container" id="confetti-container"></div>
+        </main>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Message here</div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
